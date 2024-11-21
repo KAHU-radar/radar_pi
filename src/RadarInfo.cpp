@@ -469,7 +469,7 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint
 
   msgpack::zone zone;
   std::map<std::string, msgpack::type::variant> spoke;
-  spoke["type"] = "spoke-z";
+  spoke["type"] = "spoke";
   spoke["angle"] = angle;
   spoke["bearing"] = bearing;
   spoke["data"] = msgpack::type::raw_ref((const char*) data, len);
