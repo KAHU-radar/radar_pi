@@ -1,3 +1,7 @@
+Kahu-exporter
+===================================
+This is a branch of `radar_pi` that writes all received radar spokes in msgpack format to a file (or named pipe), `radar-data.msgpack` in the current directory.
+
 
 radar_pi - Radar Plugin for OpenCPN
 ===================================
