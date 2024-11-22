@@ -37,6 +37,9 @@
 #include "RadarReceive.h"
 #include "radar_pi.h"
 
+#include <msgpack.hpp>
+#include <iostream>
+
 PLUGIN_BEGIN_NAMESPACE
 
 class RadarDraw;
@@ -225,6 +228,9 @@ public:
     time_t m_idle_standby; // When we will change to standby
     time_t m_idle_transmit; // When we will change to transmit
 
+    std::ofstream* radar_data;
+    msgpack::packer<std::ofstream>* radar_data_packer;
+ 
     /* Methods */
 
     RadarInfo(radar_pi* pi, int radar);

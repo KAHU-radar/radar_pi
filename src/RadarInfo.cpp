@@ -143,6 +143,9 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
   for (size_t z = 0; z < GUARD_ZONES; z++) {
     m_guard_zone[z] = new GuardZone(m_pi, this, z);
   }
+
+  radar_data = new std::ofstream("radar-data.msgpack", std::ios::binary);
+  radar_data_packer = new msgpack::packer<std::ofstream>(radar_data);
 }
 
 void RadarInfo::Shutdown() {
@@ -218,6 +221,9 @@ RadarInfo::~RadarInfo() {
     delete m_polar_lookup;
     m_polar_lookup = 0;
   }
+
+  delete radar_data_packer;
+  delete radar_data;
 }
 
 /**
@@ -460,6 +466,18 @@ void RadarInfo::CalculateRotationSpeed(SpokeBearing angle) {
  */
 void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint8_t *data, size_t len, int range_meters,
                                   wxLongLong time_rec) {
+
+  msgpack::zone zone;
+  std::map<std::string, msgpack::type::variant> spoke;
+  spoke["type"] = "spoke";
+  spoke["angle"] = angle;
+  spoke["bearing"] = bearing;
+  spoke["data"] = msgpack::type::raw_ref((const char*) data, len);
+  spoke["data_len"] = len;
+  spoke["range_meters"] = range_meters;
+  spoke["time_rec"] = time_rec.GetValue();
+  radar_data_packer->pack(spoke);
+
   int orientation;
   int i;
 
